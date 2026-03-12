@@ -8,6 +8,7 @@ import {
   Tooltip,
   ReferenceLine,
   CartesianGrid,
+  Line,
 } from "recharts";
 
 type DistributionPoint = {
@@ -93,9 +94,8 @@ function buildDistribution(pullsArray: number[]): DistributionPoint[] {
   const distribution: DistributionPoint[] = [];
   for (let p = min; p <= max; p++) {
     const f = freqMap[p] ?? 0;
-    if (f > 0) {
-      distribution.push({ pulls: p, frequency: f });
-    }
+    if (f <= 0) continue;
+    distribution.push({ pulls: p, frequency: f });
   }
 
   return distribution;
@@ -353,12 +353,21 @@ export const App: React.FC = () => {
                       }}
                       labelStyle={{ color: "#e5e7eb", marginBottom: 4 }}
                     />
+                    <Line
+                      type="monotone"
+                      dataKey="cumulative"
+                      stroke="#e5e7eb"
+                      strokeWidth={1.5}
+                      dot={false}
+                      name="ECDF (acumulado)"
+                    />
                     <Area
                       type="monotone"
                       dataKey="frequency"
                       stroke={accent}
-                      strokeWidth={2}
+                      strokeWidth={1}
                       fill="url(#distFill)"
+                      name="Frecuencia"
                     />
                     <ReferenceLine
                       x={result.averagePulls}
