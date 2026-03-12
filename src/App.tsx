@@ -134,20 +134,15 @@ export const App: React.FC = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(e.target.value);
     if (Number.isNaN(value)) return;
-    if (value < 1) {
-      setDesiredCopies(1);
-    } else if (value > 7) {
-      setDesiredCopies(7);
-    } else {
-      setDesiredCopies(value);
-    }
+    const clamped = Math.min(6, Math.max(1, value));
+    setDesiredCopies(clamped);
   };
 
   const handleSimulate = () => {
     setError(null);
 
-    if (desiredCopies < 1 || desiredCopies > 7) {
-      setError("Las copias deseadas deben estar entre 1 y 7.");
+    if (desiredCopies < 1 || desiredCopies > 6) {
+      setError("Las copias deseadas deben estar entre 1 y 6.");
       return;
     }
 
@@ -185,21 +180,21 @@ export const App: React.FC = () => {
           <section className="flex flex-col md:flex-row md:items-end gap-6">
             <div className="flex-1 space-y-3">
               <label className="text-xs font-medium text-gray-300 uppercase tracking-wide">
-                Copias deseadas
+                Copias deseadas (1 - 6)
               </label>
               <div className="flex items-center gap-3">
                 <input
                   id="copies"
                   type="number"
                   min={1}
-                  max={7}
+                  max={6}
                   value={desiredCopies}
                   onChange={handleInputChange}
                   className="w-24 bg-[#050608] border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--accent-color)] focus:border-[var(--accent-color)] transition"
                   style={{ ["--accent-color" as any]: accent }}
                 />
                 <span className="text-xs text-gray-500">
-                  Entre 1 y 7 copias del personaje promocional.
+                  Entre 1 y 6 copias del personaje promocional.
                 </span>
               </div>
               <p className="text-[11px] text-gray-500">
